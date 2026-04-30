@@ -1,0 +1,99 @@
+.projects-toolbar { margin-bottom: 20px; }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.proj-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.proj-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+
+.proj-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.proj-icon {
+  width: 38px;
+  height: 38px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.proj-card-actions { display: flex; gap: 4px; }
+
+.proj-name {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  transition: color 0.12s;
+}
+.proj-name:hover { color: var(--accent); }
+.proj-desc { font-size: 0.82rem; color: var(--text-2); margin-top: 2px; line-height: 1.5; }
+
+.proj-meta {
+  display: flex;
+  gap: 16px;
+}
+
+.proj-stat {
+  font-size: 0.8rem;
+  color: var(--text-3);
+  font-family: 'JetBrains Mono', monospace;
+}
+.proj-stat-num { color: var(--text); font-weight: 600; }
+
+.proj-members { display: flex; gap: 4px; }
+
+.member-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--bg-3);
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+}
+.member-avatar.more { font-size: 0.65rem; }
+
+.proj-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.proj-owner { font-size: 0.75rem; color: var(--text-3); }
+
+.loading-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}

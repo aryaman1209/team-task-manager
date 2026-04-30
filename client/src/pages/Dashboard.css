@@ -1,0 +1,186 @@
+.loading-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  transition: border-color 0.15s;
+}
+.stat-card:hover { border-color: var(--border-2); }
+
+.accent-card { border-color: rgba(245,158,11,0.2); background: var(--accent-dim); }
+.danger-card { border-color: rgba(239,68,68,0.15); background: var(--red-dim); }
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.progress-card {
+  margin-bottom: 20px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-label { font-size: 0.85rem; color: var(--text-2); }
+.progress-pct { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent); }
+
+.progress-bar-wrap {
+  height: 6px;
+  background: var(--bg-3);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #fbbf24);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.progress-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--text-2);
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.card-count {
+  background: var(--bg-3);
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.card-count.danger { background: var(--red-dim); color: var(--red); }
+
+.card-link { font-size: 0.8rem; color: var(--accent); }
+.card-link:hover { text-decoration: underline; }
+
+.overdue-card { border-color: rgba(239,68,68,0.15); }
+
+/* Task rows */
+.task-list { display: flex; flex-direction: column; gap: 6px; }
+
+.task-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: all 0.12s;
+}
+.task-row:hover { background: var(--bg-2); border-color: var(--border); }
+
+.task-row-left { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+.task-row-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.task-row-title {
+  font-size: 0.85rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.task-project-link {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  font-family: 'JetBrains Mono', monospace;
+}
+.task-project-link:hover { color: var(--accent); }
+
+.task-due { font-size: 0.75rem; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+.task-due.overdue { color: var(--red); }
+
+.task-assignee {
+  font-size: 0.72rem;
+  color: var(--text-3);
+  background: var(--bg-3);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* Project list */
+.project-list { display: flex; flex-direction: column; gap: 6px; }
+
+.project-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.12s;
+}
+.project-row:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+.project-row-name { font-size: 0.875rem; font-weight: 500; }
+.project-row-meta { display: flex; gap: 12px; font-size: 0.75rem; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+
+@media (max-width: 900px) {
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .dash-grid { grid-template-columns: 1fr; }
+}
