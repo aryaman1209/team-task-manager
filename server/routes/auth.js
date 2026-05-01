@@ -2,10 +2,8 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../prismaClient'); // ✅ SAFE IMPORT
 const { authenticate } = require('../middleware/auth');
-
-const prisma = new PrismaClient();
 
 const signToken = (userId) =>
   jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -20,22 +18,38 @@ router.post(
     body('role').optional().isIn(['ADMIN', 'MEMBER']),
   ],
   async (req, res) => {
+    if (!prisma) return res.status(500).json({ error: "Database not ready" });
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
     const { name, email, password, role } = req.body;
+
     try {
       const existing = await prisma.user.findUnique({ where: { email } });
       if (existing) return res.status(409).json({ error: 'Email already in use' });
 
       const hash = await bcrypt.hash(password, 12);
+
       const user = await prisma.user.create({
-        data: { name, email, password: hash, role: role || 'MEMBER' },
-        select: { id: true, name: true, email: true, role: true, createdAt: true },
+        data: {
+          name,
+          email,
+          password: hash,
+          role: role || 'MEMBER',
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          createdAt: true,
+        },
       });
 
       const token = signToken(user.id);
       res.status(201).json({ token, user });
+
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Server error' });
@@ -51,10 +65,13 @@ router.post(
     body('password').notEmpty(),
   ],
   async (req, res) => {
+    if (!prisma) return res.status(500).json({ error: "Database not ready" });
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
     const { email, password } = req.body;
+
     try {
       const user = await prisma.user.findUnique({ where: { email } });
       if (!user) return res.status(401).json({ error: 'Invalid credentials' });
@@ -64,8 +81,11 @@ router.post(
 
       const { password: _, ...safeUser } = user;
       const token = signToken(user.id);
+
       res.json({ token, user: safeUser });
+
     } catch (err) {
+      console.error(err);
       res.status(500).json({ error: 'Server error' });
     }
   }
@@ -76,13 +96,21 @@ router.get('/me', authenticate, (req, res) => {
   res.json({ user: req.user });
 });
 
-// GET /api/auth/users (admin: list all users for assignment)
+// GET /api/auth/users
 router.get('/users', authenticate, async (req, res) => {
-  const users = await prisma.user.findMany({
-    select: { id: true, name: true, email: true, role: true },
-    orderBy: { name: 'asc' },
-  });
-  res.json(users);
+  if (!prisma) return res.status(500).json({ error: "Database not ready" });
+
+  try {
+    const users = await prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true },
+      orderBy: { name: 'asc' },
+    });
+
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 module.exports = router;
