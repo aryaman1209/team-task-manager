@@ -10,15 +10,17 @@ const dashboardRoutes = require('./routes/dashboard');
 
 const app = express();
 
+// ✅ Health route FIRST (very important)
+app.get('/api/health', (req, res) => {
+  res.status(200).send('ok');
+});
+
 app.use(cors({
   origin: process.env.CLIENT_URL || '*',
   credentials: true,
 }));
+
 app.use(express.json());
-
-
-// Health check
-app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
 
 // API routes
 app.use('/api/auth', authRoutes);
