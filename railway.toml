@@ -3,7 +3,7 @@ builder = "NIXPACKS"
 buildCommand = "npm install && cd server && npm install && cd ../client && npm install && npm run build"
 
 [deploy]
-startCommand = "sleep 10 && npx prisma db push --schema=server/prisma/schema.prisma && node server/index.js"
+startCommand = "node server/index.js"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 60
 restartPolicyType = "ON_FAILURE"
