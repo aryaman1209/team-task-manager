@@ -2,8 +2,10 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const prisma = require('../prismaClient'); // ✅ SAFE IMPORT
+const { PrismaClient } = require('@prisma/client');
 const { authenticate } = require('../middleware/auth');
+
+const prisma = new PrismaClient();
 
 const signToken = (userId) =>
   jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -18,8 +20,6 @@ router.post(
     body('role').optional().isIn(['ADMIN', 'MEMBER']),
   ],
   async (req, res) => {
-    if (!prisma) return res.status(500).json({ error: "Database not ready" });
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
@@ -65,8 +65,6 @@ router.post(
     body('password').notEmpty(),
   ],
   async (req, res) => {
-    if (!prisma) return res.status(500).json({ error: "Database not ready" });
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
@@ -98,8 +96,6 @@ router.get('/me', authenticate, (req, res) => {
 
 // GET /api/auth/users
 router.get('/users', authenticate, async (req, res) => {
-  if (!prisma) return res.status(500).json({ error: "Database not ready" });
-
   try {
     const users = await prisma.user.findMany({
       select: { id: true, name: true, email: true, role: true },
