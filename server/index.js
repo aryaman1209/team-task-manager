@@ -3,35 +3,32 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const { PrismaClient } = require('@prisma/client');
-
-const authRoutes = require('./routes/auth');
-const projectRoutes = require('./routes/projects');
-const taskRoutes = require('./routes/tasks');
-const dashboardRoutes = require('./routes/dashboard');
-
 const app = express();
-const prisma = new PrismaClient();
 
-// ✅ Health route FIRST (no DB dependency)
+// ✅ health route FIRST (no DB)
 app.get('/api/health', (req, res) => {
   res.status(200).send('ok');
 });
 
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*',
+  origin: '*',
   credentials: true,
 }));
 
 app.use(express.json());
 
-// API routes (we’ll protect them later if needed)
-app.use('/api/auth', authRoutes);
-app.use('/api/projects', projectRoutes);
-app.use('/api/tasks', taskRoutes);
-app.use('/api/dashboard', dashboardRoutes);
+// 👉 TEMP: comment routes (important)
+/// const authRoutes = require('./routes/auth');
+/// const projectRoutes = require('./routes/projects');
+/// const taskRoutes = require('./routes/tasks');
+/// const dashboardRoutes = require('./routes/dashboard');
 
-// Serve frontend
+/// app.use('/api/auth', authRoutes);
+/// app.use('/api/projects', projectRoutes);
+/// app.use('/api/tasks', taskRoutes);
+/// app.use('/api/dashboard', dashboardRoutes);
+
+// serve frontend
 if (process.env.NODE_ENV === 'production') {
   const distPath = path.join(__dirname, '../client/dist');
   app.use(express.static(distPath));
@@ -40,24 +37,8 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
-});
-
-// ✅ Use Railway port
 const PORT = process.env.PORT || 8080;
 
-// ✅ Start server FIRST
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
-
-  // ✅ Connect DB AFTER server is live
-  prisma.$connect()
-    .then(() => console.log('✅ Database connected'))
-    .catch((err) => {
-      console.error('❌ DB connection failed:', err.message);
-      // Do NOT crash — keep server alive for healthcheck
-    });
 });
