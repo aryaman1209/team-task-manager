@@ -17,7 +17,7 @@ app.use(cors({
 app.use(express.json());
 const { exec } = require("child_process");
 
-exec("npx prisma db push", (err, stdout, stderr) => {
+exec("npx prisma db push --schema=server/prisma/schema.prisma", (err, stdout, stderr) => {
   console.log("PRISMA OUTPUT:", stdout);
   console.error("PRISMA ERROR:", stderr);
 });
