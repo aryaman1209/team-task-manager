@@ -1,8 +1,0 @@
-[build]
-builder = "NIXPACKS"
-buildCommand = "cd server && npm install && npx prisma generate"
-
-[deploy]
-startCommand = "cd server && node index.js"
-healthcheckPath = "/api/health"
-healthcheckTimeout = 60
